@@ -72,6 +72,10 @@ class AppointmentController {
       return res.status(400).json({ error: 'Appoitment date is not available' });
     }
 
+    if (req.userId === provider_id) {
+      return res.status(400).json({ error: 'You cannot schedule with yourself' });
+    }
+
     const appointment = await Appointment.create({
       user_id: req.userId,
       provider_id,
