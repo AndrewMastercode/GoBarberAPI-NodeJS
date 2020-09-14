@@ -19,7 +19,7 @@ module.exports = {
         onDelete: 'SET NULL',
         allowNull: true,
       },
-      providers_id: {
+      provider_id: {
         type: Sequelize.INTEGER,
         references: { model: 'users', ikey: 'id' },
         onUpdate: 'CASCADE',
