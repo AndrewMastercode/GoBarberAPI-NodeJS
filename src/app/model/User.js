@@ -7,7 +7,7 @@ class User extends Model {
       {
         name: Sequelize.STRING,
         email: Sequelize.STRING,
-        password_decrypted: Sequelize.VIRTUAL,
+        passwordVirtual: Sequelize.VIRTUAL,
         password: Sequelize.STRING,
         provider: Sequelize.BOOLEAN,
       },
@@ -17,8 +17,8 @@ class User extends Model {
     );
 
     this.addHook('beforeSave', async (user) => {
-      if (user.password_decrypted) {
-        user.password = await bcrypt.hash(user.password_decrypted, 8);
+      if (user.passwordVirtual) {
+        user.password = await bcrypt.hash(user.passwordVirtual, 8);
       }
     });
 
@@ -29,8 +29,8 @@ class User extends Model {
     this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
   }
 
-  checkPassword(password_decrypted) {
-    return bcrypt.compare(password_decrypted, this.password);
+  checkPassword(passwordVirtual) {
+    return bcrypt.compare(passwordVirtual, this.password);
   }
 }
 
