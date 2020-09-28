@@ -13,12 +13,13 @@ import NotificationController from './app/controller/NotificationController';
 
 import validateUserStore from './app/validator/UserStore';
 import validateUserUpdate from './app/validator/UserUpdate';
+import validateSessionStore from './app/validator/SessionStore';
 
 const routes = new Router();
 const upload = multer(multerConfig);
 
 routes.post('/users', validateUserStore, UserController.store);
-routes.post('/sessions', SessionController.store);
+routes.post('/sessions', validateSessionStore, SessionController.store);
 
 //  rotas que exigem autenticacao
 routes.use(authMiddleware);
