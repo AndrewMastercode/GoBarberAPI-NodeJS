@@ -12,6 +12,7 @@ import ScheduleController from './app/controller/ScheduleController';
 import NotificationController from './app/controller/NotificationController';
 
 import validateUserStore from './app/validator/UserStore';
+import validateUserUpdate from './app/validator/UserUpdate';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -22,7 +23,7 @@ routes.post('/sessions', SessionController.store);
 //  rotas que exigem autenticacao
 routes.use(authMiddleware);
 routes.get('/providers', ProviderController.index);
-routes.put('/users', UserController.update);
+routes.put('/users', validateUserUpdate, UserController.update);
 routes.get('/appointments', AppointmentController.index);
 routes.post('/appointments', AppointmentController.store);
 routes.delete('/appointments/:id', AppointmentController.delete);
