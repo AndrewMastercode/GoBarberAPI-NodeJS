@@ -11,10 +11,12 @@ import AppointmentController from './app/controller/AppointmentController';
 import ScheduleController from './app/controller/ScheduleController';
 import NotificationController from './app/controller/NotificationController';
 
+import validateUserStore from './app/validator/UserStore';
+
 const routes = new Router();
 const upload = multer(multerConfig);
 
-routes.post('/users', UserController.store);
+routes.post('/users', validateUserStore, UserController.store);
 routes.post('/sessions', SessionController.store);
 
 //  rotas que exigem autenticacao
