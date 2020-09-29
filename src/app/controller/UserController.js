@@ -1,5 +1,7 @@
 import User from '../model/User';
 
+import Cache from '../../lib/Cache';
+
 class UserController {
   async store(req, res) {
     const userExists = await User.findOne({ where: { email: req.body.email } });
@@ -11,6 +13,13 @@ class UserController {
     const {
       id, name, email, provider,
     } = await User.create(req.body);
+
+    /* sempre que adicionar um novo provedor ao banco de dados
+        deve-se limpar o cache para que a proxima requisição
+        da lista de provedores devolva esse novo provedor */
+    if (provider) {
+      await Cache.invalidate('providers');
+    }
 
     return res.json({
       id, name, email, provider,
