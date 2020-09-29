@@ -5,9 +5,21 @@ import File from '../model/File';
 import CreateAppointmentService from '../service/CreateAppointmentService';
 import DeleteAppointmentService from '../service/DeleteAppointmentService';
 
+import Cache from '../../lib/Cache';
+
 class AppointmentController {
   async index(req, res) {
     const { page = 1 } = req.query;
+
+    /* separar o cache através de um key composta, para nao sobreescrever
+      os dados usando apenas um caminho */
+    const cacheKey = `user:${req.userId}:appointments:${page}`;
+
+    const cached = await Cache.get(cacheKey);
+
+    if (cached) {
+      return res.json(cached);
+    }
 
     const appointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
@@ -27,6 +39,8 @@ class AppointmentController {
       }],
     });
 
+    await Cache.set(cacheKey, appointments);
+
     return res.json(appointments);
   }
 
@@ -37,6 +51,8 @@ class AppointmentController {
       const appointment = await CreateAppointmentService.run(
         { provider_id, user_id: req.userId, date },
       );
+
+      await Cache.invalidatePrefix(`user:${req.userId}:appointments`);
 
       return res.json(appointment);
     } catch (err) {
@@ -49,6 +65,8 @@ class AppointmentController {
       const appointment = await DeleteAppointmentService.run(
         { user_id: req.userId, provider_id: req.params.id },
       );
+
+      await Cache.invalidatePrefix(`user:${req.userId}:appointments`);
 
       return res.json(appointment);
     } catch (err) {
