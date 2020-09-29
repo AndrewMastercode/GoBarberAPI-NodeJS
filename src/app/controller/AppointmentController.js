@@ -31,21 +31,29 @@ class AppointmentController {
   }
 
   async store(req, res) {
-    const { provider_id, date } = req.body;
+    try {
+      const { provider_id, date } = req.body;
 
-    const appointment = await CreateAppointmentService.run(
-      { provider_id, user_id: req.userId, date },
-    );
+      const appointment = await CreateAppointmentService.run(
+        { provider_id, user_id: req.userId, date },
+      );
 
-    return res.json(appointment);
+      return res.json(appointment);
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
   }
 
   async delete(req, res) {
-    const appointment = await DeleteAppointmentService.run(
-      { user_id: req.userId, provider_id: req.params.id },
-    );
+    try {
+      const appointment = await DeleteAppointmentService.run(
+        { user_id: req.userId, provider_id: req.params.id },
+      );
 
-    return res.json(appointment);
+      return res.json(appointment);
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
   }
 }
 
