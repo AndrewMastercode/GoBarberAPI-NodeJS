@@ -15,6 +15,7 @@ import validateUserStore from './app/validator/UserStore';
 import validateUserUpdate from './app/validator/UserUpdate';
 import validateSessionStore from './app/validator/SessionStore';
 import validateAppointmentStore from './app/validator/AppointmentStore';
+import AvailableController from './app/controller/AvailableController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -25,6 +26,7 @@ routes.post('/sessions', validateSessionStore, SessionController.store);
 //  rotas que exigem autenticacao
 routes.use(authMiddleware);
 routes.get('/providers', ProviderController.index);
+routes.get('/providers/:provider_id/available', AvailableController.index);
 routes.put('/users', validateUserUpdate, UserController.update);
 routes.get('/appointments', AppointmentController.index);
 routes.post('/appointments', validateAppointmentStore, AppointmentController.store);
